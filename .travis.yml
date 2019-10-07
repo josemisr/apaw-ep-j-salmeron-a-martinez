@@ -1,0 +1,24 @@
+language: java
+branches:
+  only:
+    - develop
+    - /^release-[0-999].[0-999]$/
+    - master
+notifications:
+  email:
+    recipients:
+      - digajjj21@gmail.com
+script:
+  #Test unitario y de integracion con cobertura
+  - mvn org.jacoco:jacoco-maven-plugin:prepare-agent verify
+  #SONARCLOUD
+  - mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=josemisr -Dsonar.login=$SONAR
+
+#Deploy https://apaw-ep-xxx.herokuapp.com
+deploy:
+  provider: heroku
+  api_key:
+    secure: $HEROKU
+  on:
+    branch: master
+
