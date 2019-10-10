@@ -1,4 +1,4 @@
-package es.upm.miw.apaw_ep_themes;
+package es.upm.miw.apaw_ep_computers;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
