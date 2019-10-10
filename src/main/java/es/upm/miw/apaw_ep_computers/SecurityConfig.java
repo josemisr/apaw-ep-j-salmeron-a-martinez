@@ -1,4 +1,4 @@
-package es.upm.miw.apaw_ep_themes;
+package es.upm.miw.apaw_ep_computers;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

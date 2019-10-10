@@ -1,4 +1,4 @@
-package es.upm.miw.apaw_ep_themes.exceptions;
+package es.upm.miw.apaw_ep_computers.exceptions;
 
 public class ConflictException extends RuntimeException {
     private static final String DESCRIPTION = "Conflict Exception (409)";
