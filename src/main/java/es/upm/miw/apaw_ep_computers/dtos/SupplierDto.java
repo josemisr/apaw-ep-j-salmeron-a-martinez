@@ -10,6 +10,10 @@ public class SupplierDto {
 
     private Double margin;
 
+    public SupplierDto() {
+        // empty for framework
+    }
+
     public SupplierDto(String name, double margin) {
         this.name = name;
         this.margin = margin;
