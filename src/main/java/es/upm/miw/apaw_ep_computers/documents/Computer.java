@@ -4,23 +4,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Document
 public class Computer {
-
     @Id
     private String id;
 
     private String description;
 
-    private double price;
+    private Double price;
 
-    private double cost;
+    private Double cost;
 
-    private boolean isStocked;
+    private Boolean isStocked;
 
     @DBRef
     private Supplier supplier;
@@ -28,13 +25,13 @@ public class Computer {
     @DBRef
     private List<Component> components;
 
-    public Computer(String description, double price, double cost, boolean isStocked, Supplier supplier){
+    public Computer(String description, double price, double cost, boolean isStocked, Supplier supplier, List<Component> components){
         this.description = description;
         this.price = price;
         this.cost = cost;
         this.isStocked = isStocked;
         this.supplier = supplier;
-        this.components = new ArrayList<>();
+        this.components = components;
     }
 
     public String getId() {return id; }
@@ -49,7 +46,7 @@ public class Computer {
 
     public Supplier getSupplier() {return supplier; }
 
-    public List<Component> getComponent() {return components; }
+    public List<Component> getComponents() {return components; }
 
     @Override
     public String toString() {
@@ -62,4 +59,5 @@ public class Computer {
                 ", supplier='" + supplier + '\'' +
                 '}';
     }
+
 }
