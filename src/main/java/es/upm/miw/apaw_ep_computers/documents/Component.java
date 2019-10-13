@@ -1,7 +1,11 @@
 package es.upm.miw.apaw_ep_computers.documents;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Document
 public class Component {
@@ -16,11 +20,15 @@ public class Component {
 
     private String model;
 
+    @DBRef
+    private List<Computer> computers;
+
     public Component(String type, String name, double cost, String model) {
         this.type = type;
         this.name = name;
         this.cost = cost;
         this.model = model;
+        this.computers = new ArrayList<>();
     }
 
     public String getId() { return id; }
@@ -38,6 +46,8 @@ public class Component {
     }
 
     public String getModel() { return model; }
+
+    public List<Computer> getComputers() {return computers; }
 
     @Override
     public String toString() {
