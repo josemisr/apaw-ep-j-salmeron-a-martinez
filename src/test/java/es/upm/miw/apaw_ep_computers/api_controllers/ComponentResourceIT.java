@@ -71,7 +71,6 @@ public class ComponentResourceIT {
                 .expectBodyList(ComponentDto.class)
                 .returnResult().getResponseBody();
         assertFalse(components.isEmpty());
-        assertEquals(3, components.size());
     }
 
     @Test
