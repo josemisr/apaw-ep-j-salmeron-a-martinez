@@ -3,6 +3,7 @@ package es.upm.miw.apaw_ep_computers.api_controllers;
 import es.upm.miw.apaw_ep_computers.business_controllers.ComponentBusinessController;
 import es.upm.miw.apaw_ep_computers.dtos.ComponentDto;
 
+import es.upm.miw.apaw_ep_computers.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class ComponentResource {
 
     static final String COMPONENTS = "/components";
+    static final String SEARCH = "/search";
 
     private ComponentBusinessController componentBusinessController;
 
@@ -26,4 +28,13 @@ public class ComponentResource {
         componentDto.validate();
         return this.componentBusinessController.create(componentDto);
     }
+
+    @GetMapping(value = SEARCH)
+    public List<ComponentDto> find(@RequestParam String q) {
+        if (!"type".equals(q.split(":=")[0])) {
+            throw new BadRequestException("query param q is incorrect, missing 'type:='");
+        }
+        return this.componentBusinessController.findByTypeEqual(q.split(":=")[1]);
+    }
+
 }

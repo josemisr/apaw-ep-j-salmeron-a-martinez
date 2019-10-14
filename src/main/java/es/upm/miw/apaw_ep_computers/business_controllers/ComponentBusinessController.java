@@ -13,21 +13,28 @@ import java.util.stream.Collectors;
 @Controller
 public class ComponentBusinessController {
 
-        private ComponentDao componentDao;
+    private ComponentDao componentDao;
 
-        @Autowired
-        public ComponentBusinessController(ComponentDao componentDao) {
-            this.componentDao = componentDao;
-        }
+    @Autowired
+    public ComponentBusinessController(ComponentDao componentDao) {
+        this.componentDao = componentDao;
+    }
 
-        public ComponentDto create(ComponentDto componentDto) {
-            Component component = new Component(componentDto.getType(), componentDto.getName(), componentDto.getCost(), componentDto.getModel());
-            this.componentDao.save(component);
-            return new ComponentDto(component);
-        }
+    public ComponentDto create(ComponentDto componentDto) {
+        Component component = new Component(componentDto.getType(), componentDto.getName(), componentDto.getCost(), componentDto.getModel());
+        this.componentDao.save(component);
+        return new ComponentDto(component);
+    }
 
-        public List<ComponentDto> readAll() {
-            List<Component> components = this.componentDao.findAll();
-            return components.stream().map(ComponentDto::new).collect(Collectors.toList());
-        }
+    public List<ComponentDto> readAll() {
+        List<Component> components = this.componentDao.findAll();
+        return components.stream().map(ComponentDto::new).collect(Collectors.toList());
+    }
+
+    public List<ComponentDto> findByTypeEqual(String value) {
+        return this.componentDao.findAll().stream()
+                .filter(component -> component.getType().equals(value))
+                .map(ComponentDto::new)
+                .collect(Collectors.toList());
+    }
 }

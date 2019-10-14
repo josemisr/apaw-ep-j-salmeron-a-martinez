@@ -44,4 +44,44 @@ public class ComponentResourceIT {
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }
+
+    void createComponent(String type,String name, Double cost, String model){
+        this.webTestClient
+                .post().uri(ComponentResource.COMPONENTS)
+                .body(BodyInserters.fromObject(new ComponentDto(type, name,cost,model)))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ComponentDto.class).returnResult().getResponseBody();
+    }
+
+    @Test
+    void testGetSearchType() {
+        createComponent("cpu","intel core i5",150.0,"7400");
+        createComponent("cpu","intel core i7",180.0,"8400");
+        createComponent("cpu","intel core i7",200.90,"9700");
+        createComponent("memory","Samsung HDD",50.0,"HDD-1TB");
+
+        List<ComponentDto> components = this.webTestClient
+                .get().uri(uriBuilder ->
+                        uriBuilder.path(ComponentResource.COMPONENTS + ComponentResource.SEARCH)
+                                .queryParam("q", "type:=cpu")
+                                .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ComponentDto.class)
+                .returnResult().getResponseBody();
+        assertFalse(components.isEmpty());
+        assertEquals(3, components.size());
+    }
+
+    @Test
+    void testGetSearchTypeBadQueryException() {
+        this.webTestClient
+                .get().uri(uriBuilder ->
+                uriBuilder.path(ComponentResource.COMPONENTS + ComponentResource.SEARCH)
+                        .queryParam("q", "types:=cpu")
+                        .build())
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 }
