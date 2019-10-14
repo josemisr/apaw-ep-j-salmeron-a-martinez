@@ -30,15 +30,11 @@ public class Client {
         this.computers = new ArrayList<>();
     }
 
-    public Client(String idCard, String name, LocalDateTime birthDate, Address address){
-        this.idCard = idCard;
-        this.name = name;
-        this.birthDate = birthDate;
-        this.address = address;
-        this.computers = new ArrayList<>();
-    }
-
     public String getId(){ return id; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getIdCard(){ return idCard; }
 
