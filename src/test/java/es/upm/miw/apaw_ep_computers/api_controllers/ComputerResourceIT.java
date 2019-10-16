@@ -46,12 +46,7 @@ public class ComputerResourceIT {
 
     @Test
     void testCreateComputer() {
-        ComputerDto computerDto = this.webTestClient
-                .post().uri(ComputerResource.COMPUTERS)
-                .body(BodyInserters.fromObject(new ComputerDto("cpu", 160.5,150.5,true, this.supplierDto.getId(), this.components)))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+        ComputerDto computerDto = postComputerDto();
         assertNotNull(computerDto);
         assertEquals("cpu", computerDto.getDescription());
         assertEquals((Double)160.5, computerDto.getPrice());
@@ -59,6 +54,16 @@ public class ComputerResourceIT {
         assertEquals(true, computerDto.getIsStocked());
         assertEquals(supplierDto.getId(), computerDto.getSupplierId());
         assertEquals(components, computerDto.getComponentsId());
+    }
+
+    public ComputerDto postComputerDto() {
+        ComputerDto computerDto = this.webTestClient
+                .post().uri(ComputerResource.COMPUTERS)
+                .body(BodyInserters.fromObject(new ComputerDto("cpu", 160.5, 150.5, true, this.supplierDto.getId(), this.components)))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+        return computerDto;
     }
 
     @Test
@@ -99,5 +104,47 @@ public class ComputerResourceIT {
                 .body(BodyInserters.fromObject(computerDto))
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void testUpdateDescriptionComputer(){
+        ComputerDto firstComputerDto = postComputerDto();
+        firstComputerDto.setDescription("gpu");
+
+        this.webTestClient
+                .put().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID + ComputerResource.DESCRIPTION, firstComputerDto.getId())
+                .body(BodyInserters.fromObject(firstComputerDto))
+                .exchange()
+                .expectStatus().isOk();
+        ComputerDto secondComputerDto = this.webTestClient
+                .get().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID + ComputerResource.DESCRIPTION, firstComputerDto.getId())
+                .exchange().expectStatus().isOk()
+                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+
+        assertEquals(firstComputerDto.getDescription(), secondComputerDto.getDescription());
+    }
+
+    @Test
+    void testUpdateDescriptionComputerExceptionBadRequest() {
+        ComputerDto computerDto = postComputerDto();
+        computerDto.setDescription("gpu");
+
+        this.webTestClient
+                .put().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID + ComputerResource.DESCRIPTION, computerDto.getId())
+                .body(BodyInserters.fromObject(this.supplierDto))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void testUpdateDescriptionExceptionNotFound() {
+        ComputerDto computerDto = postComputerDto();
+        computerDto.setDescription("gpu");
+
+        this.webTestClient
+                .put().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID + ComputerResource.DESCRIPTION, 123)
+                .body(BodyInserters.fromObject(computerDto))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

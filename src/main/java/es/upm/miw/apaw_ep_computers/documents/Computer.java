@@ -46,6 +46,10 @@ public class Computer {
 
     public Supplier getSupplier() {return supplier; }
 
+    public void setDescription(String description){
+        this.description = description;
+    }
+
     public List<Component> getComponents() {return components; }
 
     @Override
