@@ -22,12 +22,7 @@ public class ComponentResourceIT {
 
     @Test
     void testCreate() {
-        ComponentDto componentDto = this.webTestClient
-                .post().uri(ComponentResource.COMPONENTS)
-                .body(BodyInserters.fromObject(new ComponentDto("cpu", "intel core i5",150,"7400")))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ComponentDto.class).returnResult().getResponseBody();
+        ComponentDto componentDto = createComponentAndReturn("cpu", "intel core i5",150d,"7400");
         assertNotNull(componentDto);
         assertEquals("cpu", componentDto.getType());
         assertEquals("intel core i5", componentDto.getName());
@@ -45,10 +40,19 @@ public class ComponentResourceIT {
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
-    void createComponent(String type,String name, Double cost, String model){
+    void createComponent(String type, String name, Double cost, String model){
         this.webTestClient
                 .post().uri(ComponentResource.COMPONENTS)
-                .body(BodyInserters.fromObject(new ComponentDto(type, name,cost,model)))
+                .body(BodyInserters.fromObject(new ComponentDto(type, name, cost, model)))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ComponentDto.class).returnResult().getResponseBody();
+    }
+
+    ComponentDto createComponentAndReturn(String type, String name, Double cost, String model){
+        return this.webTestClient
+                .post().uri(ComponentResource.COMPONENTS)
+                .body(BodyInserters.fromObject(new ComponentDto(type, name, cost, model)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ComponentDto.class).returnResult().getResponseBody();
@@ -82,5 +86,23 @@ public class ComponentResourceIT {
                         .build())
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void testDelete() {
+        ComponentDto componentDto = createComponentAndReturn("cpu", "intel core i5",150d,"7400");
+        this.webTestClient
+                .delete().uri(ComponentResource.COMPONENTS + ComponentResource.ID_ID, componentDto.getId())
+                .exchange().expectStatus().isOk();
+        this.webTestClient
+                .get().uri(ComponentResource.COMPONENTS + ComponentResource.ID_ID, componentDto.getId())
+                .exchange().expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void testDeleteExceptionBadRequest() {
+        this.webTestClient
+                .delete().uri(ComponentResource.COMPONENTS, "comp123")
+                .exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
