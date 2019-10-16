@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 public class ComputerResource {
 
     static final String COMPUTERS = "/computers";
+    static final String ID_ID = "/{id}";
+    static final String DESCRIPTION = "/description";
 
     private ComputerBusinessController computerBusinessController;
 
@@ -23,5 +25,16 @@ public class ComputerResource {
     public ComputerDto create(@RequestBody ComputerDto computerDto) {
         computerDto.validate();
         return this.computerBusinessController.create(computerDto);
+    }
+
+    @GetMapping(value = ID_ID + DESCRIPTION)
+    public ComputerDto getComputer(@PathVariable String id){
+        return this.computerBusinessController.getComputer(id);
+    }
+
+    @PutMapping(value = ID_ID + DESCRIPTION)
+    public void update(@PathVariable String id, @RequestBody ComputerDto computer){
+        computer.validateDescription();
+        this.computerBusinessController.updateDescription(id, computer.getDescription());
     }
 }
