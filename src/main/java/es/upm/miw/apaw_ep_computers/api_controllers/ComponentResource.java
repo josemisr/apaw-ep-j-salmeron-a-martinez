@@ -45,6 +45,7 @@ public class ComponentResource {
 
     @DeleteMapping(value = ID_ID)
     public void delete(@PathVariable String id){
+        this.componentBusinessController.deleteReferencedComponents(id);
         this.componentBusinessController.delete(id);
     }
 }
