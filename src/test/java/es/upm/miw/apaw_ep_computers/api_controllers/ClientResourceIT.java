@@ -185,4 +185,60 @@ public class ClientResourceIT {
         Computer computerNull =  this.computerDao.findById(computer.getId()).orElse(null);
         assertEquals(null,computerNull);
     }
+
+    @Test
+    void testPatchName() {
+        String id = createClient("name").getId();
+        ClientPatchDto clientPatchDto = new ClientPatchDto();
+        clientPatchDto.setName("newName");
+        this.webTestClient
+                .patch().uri(ClientResource.CLIENTS + ClientResource.ID_ID, id)
+                .body(BodyInserters.fromObject(clientPatchDto))
+                .exchange()
+                .expectStatus().isOk();
+        Client client = this.clientDao.findById(id).orElse(null);
+        assertEquals("newName", client.getName());
+    }
+
+    @Test
+    void testPatchIdCard() {
+        String id = createClient("name").getId();
+        ClientPatchDto clientPatchDto = new ClientPatchDto();
+        clientPatchDto.setIdCard("newIdCard");
+        this.webTestClient
+                .patch().uri(ClientResource.CLIENTS + ClientResource.ID_ID, id)
+                .body(BodyInserters.fromObject(clientPatchDto))
+                .exchange()
+                .expectStatus().isOk();
+        Client client = this.clientDao.findById(id).orElse(null);
+        assertEquals("newIdCard", client.getIdCard());
+    }
+
+    @Test
+    void testPatchIdCardAndName() {
+        String id = createClient("name").getId();
+        ClientPatchDto clientPatchDto = new ClientPatchDto();
+        clientPatchDto.setIdCard("newIdCard");
+        clientPatchDto.setName("newName");
+        this.webTestClient
+                .patch().uri(ClientResource.CLIENTS + ClientResource.ID_ID, id)
+                .body(BodyInserters.fromObject(clientPatchDto))
+                .exchange()
+                .expectStatus().isOk();
+        Client client = this.clientDao.findById(id).orElse(null);
+        assertEquals("newIdCard", client.getIdCard());
+        assertEquals("newName", client.getName());
+    }
+
+    @Test
+    void testPatchNameBadRequest() {
+        String id = createClient("name").getId();
+        ClientBasicDto clientDto = new ClientBasicDto();
+        this.webTestClient
+                .patch().uri(ClientResource.CLIENTS + ClientResource.ID_ID, id)
+                .body(BodyInserters.fromObject(clientDto))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
 }

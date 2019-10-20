@@ -5,6 +5,7 @@ import es.upm.miw.apaw_ep_computers.daos.ComputerDao;
 import es.upm.miw.apaw_ep_computers.documents.Client;
 import es.upm.miw.apaw_ep_computers.dtos.ClientBasicDto;
 import es.upm.miw.apaw_ep_computers.dtos.ClientDto;
+import es.upm.miw.apaw_ep_computers.dtos.ClientPatchDto;
 import es.upm.miw.apaw_ep_computers.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Controller;
 public class ClientBusinessController {
 
     private ClientDao clientDao;
-
     private ComputerDao computerDao;
 
     @Autowired
@@ -39,6 +39,13 @@ public class ClientBusinessController {
     public void updateName(String id, String name) {
         Client client = this.findClientByIdAssured(id);
         client.setName(name);
+        this.clientDao.save(client);
+    }
+
+    public void patch(String id, ClientPatchDto clientPatchDto){
+        Client client = this.findClientByIdAssured(id);
+        client.setName(clientPatchDto.getName());
+        client.setIdCard(clientPatchDto.getIdCard());
         this.clientDao.save(client);
     }
 
