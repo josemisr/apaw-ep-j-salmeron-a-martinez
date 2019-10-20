@@ -35,6 +35,7 @@ public class ComputerDto {
     }
 
     public ComputerDto(Computer computer) {
+        this.id=computer.getId();
         this.description = computer.getDescription();
         this.price = computer.getPrice();
         this.cost = computer.getCost();

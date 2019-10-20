@@ -27,13 +27,18 @@ public class ClientResource {
     }
 
     @GetMapping(value = ID_ID + NAME)
-    public ClientBasicDto readNick(@PathVariable String id) {
-        return this.clientBusinessController.readName(id);
+    public ClientBasicDto readById(@PathVariable String id) {
+        return this.clientBusinessController.readById(id);
     }
 
     @PutMapping(value = ID_ID + NAME)
     public void updateName(@PathVariable String id, @RequestBody ClientBasicDto clientDto) {
         clientDto.validateName();
         this.clientBusinessController.updateName(id, clientDto.getName());
+    }
+
+    @DeleteMapping(value = ID_ID + NAME)
+    public void delete(@PathVariable String id) {
+        this.clientBusinessController.deleteClient(id);
     }
 }
