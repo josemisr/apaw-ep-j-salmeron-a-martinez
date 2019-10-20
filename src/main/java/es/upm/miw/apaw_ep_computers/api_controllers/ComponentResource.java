@@ -15,6 +15,7 @@ public class ComponentResource {
 
     static final String COMPONENTS = "/components";
     static final String SEARCH = "/search";
+    static final String ID_ID = "/{id}";
 
     private ComponentBusinessController componentBusinessController;
 
@@ -37,4 +38,13 @@ public class ComponentResource {
         return this.componentBusinessController.findByTypeEqual(q.split(":=")[1]);
     }
 
+    @GetMapping(value = ID_ID)
+    public ComponentDto get(@PathVariable String id){
+        return this.componentBusinessController.get(id);
+    }
+
+    @DeleteMapping(value = ID_ID)
+    public void delete(@PathVariable String id){
+        this.componentBusinessController.delete(id);
+    }
 }

@@ -40,4 +40,17 @@ public class ComputerBusinessController {
         return new ComputerDto(computer);
     }
 
+    private Computer findComputerByIdAssured(String id) {
+        return this.computerDao.findById(id).orElseThrow(() -> new NotFoundException("Computer id: " + id));
+    }
+
+    public ComputerDto getComputer(String id){
+      return new ComputerDto(this.findComputerByIdAssured(id));
+    }
+
+    public void updateDescription(String id, String description){
+        Computer computer = findComputerByIdAssured(id);
+        computer.setDescription(description);
+        computerDao.save(computer);
+    }
 }

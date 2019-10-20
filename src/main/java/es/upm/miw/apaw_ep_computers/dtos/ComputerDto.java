@@ -35,7 +35,7 @@ public class ComputerDto {
     }
 
     public ComputerDto(Computer computer) {
-        this.id=computer.getId();
+        this.id = computer.getId();
         this.description = computer.getDescription();
         this.price = computer.getPrice();
         this.cost = computer.getCost();
@@ -51,6 +51,8 @@ public class ComputerDto {
     public String getDescription() {
         return this.description;
     }
+
+    public void setDescription(String description) { this.description = description; }
 
     public Double getPrice() {
         return this.price;
@@ -78,6 +80,12 @@ public class ComputerDto {
         }
         if (this.price < this.cost) {
             throw new BadRequestException("The price can not be greater than cost. ");
+        }
+    }
+
+    public void validateDescription() {
+        if (description == null || description.isEmpty()) {
+            throw new BadRequestException("Incomplete ComputerDto. ");
         }
     }
 
