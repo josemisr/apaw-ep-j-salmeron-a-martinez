@@ -6,6 +6,9 @@ import es.upm.miw.apaw_ep_computers.dtos.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class ReviewBusinessController {
 
@@ -20,5 +23,12 @@ public class ReviewBusinessController {
         Review review = new Review(reviewDto.getDescription(), reviewDto.getValuation());
         this.reviewDao.save(review);
         return new ReviewDto(review);
+    }
+
+    public List<ReviewDto> findByValuationEqual(String value) {
+        return this.reviewDao.findAll().stream()
+                .filter(review -> review.getValuation().equals(Integer.valueOf(value)))
+                .map(ReviewDto::new)
+                .collect(Collectors.toList());
     }
 }
