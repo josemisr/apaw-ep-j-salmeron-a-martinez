@@ -3,6 +3,7 @@ package es.upm.miw.apaw_ep_computers.api_controllers;
 import es.upm.miw.apaw_ep_computers.business_controllers.ClientBusinessController;
 import es.upm.miw.apaw_ep_computers.dtos.ClientBasicDto;
 import es.upm.miw.apaw_ep_computers.dtos.ClientDto;
+import es.upm.miw.apaw_ep_computers.dtos.ClientPatchDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +41,11 @@ public class ClientResource {
     @DeleteMapping(value = ID_ID + NAME)
     public void delete(@PathVariable String id) {
         this.clientBusinessController.deleteClient(id);
+    }
+
+    @PatchMapping(value = ID_ID)
+    public void patch(@PathVariable String id, @RequestBody ClientPatchDto clientPatchDto) {
+        clientPatchDto.validate();
+        this.clientBusinessController.patch(id, clientPatchDto);
     }
 }
