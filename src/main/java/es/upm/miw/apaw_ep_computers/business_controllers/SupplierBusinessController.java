@@ -7,6 +7,9 @@ import es.upm.miw.apaw_ep_computers.dtos.SupplierDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class SupplierBusinessController {
 
@@ -21,5 +24,10 @@ public class SupplierBusinessController {
         Supplier supplier = new Supplier(supplierDto.getName(), supplierDto.getMargin());
         this.supplierDao.save(supplier);
         return new SupplierDto(supplier);
+    }
+
+    public List<SupplierDto> readAll() {
+        List<Supplier> suppliers = this.supplierDao.findAll();
+        return suppliers.stream().map(SupplierDto::new).collect(Collectors.toList());
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -39,5 +41,37 @@ public class SupplierResourceIT {
                 .body(BodyInserters.fromObject(supplierDto))
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void ReadAll() {
+        this.webTestClient
+                .post().uri(SupplierResource.SUPPLIERS)
+                .body(BodyInserters.fromObject(new SupplierDto("Amazon", 10)))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(SupplierDto.class).returnResult().getResponseBody();
+
+        this.webTestClient
+                .post().uri(SupplierResource.SUPPLIERS)
+                .body(BodyInserters.fromObject(new SupplierDto("Amazon", 12)))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(SupplierDto.class).returnResult().getResponseBody();
+
+        List<SupplierDto> list =
+                this.webTestClient
+                        .get().uri(SupplierResource.SUPPLIERS)
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBodyList(SupplierDto.class)
+                        .returnResult().getResponseBody();
+        assertTrue(list.size() > 0);
+        assertNotNull(list.get(0).getId());
+        assertNotNull(list.get(0).getName());
+        assertNotNull(list.get(0).getMargin());
+        assertNotNull(list.get(1).getId());
+        assertNotNull(list.get(1).getName());
+        assertNotNull(list.get(1).getMargin());
     }
 }
