@@ -27,7 +27,6 @@ public class Client {
         this.idCard = idCard;
         this.name = name;
         this.birthDate = birthDate;
-        this.computers = new ArrayList<>();
     }
 
     public String getId(){ return id; }
@@ -44,8 +43,15 @@ public class Client {
 
     public Address getAddress() { return address; }
 
-    public List<Computer> getVotes() {
+    public List<Computer> getComputers() {
         return computers;
+    }
+
+    public void addComputer(Computer computer){
+        if(this.computers == null){
+            this.computers = new ArrayList<>();
+        }
+        this.computers.add(computer);
     }
 
     @Override
