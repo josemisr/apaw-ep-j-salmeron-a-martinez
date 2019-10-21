@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ComputerBusinessController {
@@ -51,6 +52,13 @@ public class ComputerBusinessController {
     public void updateDescription(String id, String description){
         Computer computer = findComputerByIdAssured(id);
         computer.setDescription(description);
+        computerDao.save(computer);
+    }
+
+    public void updatePrice(ComputerDto computerDto){
+        List<Computer> computers = computerDao.findAll();
+        Computer computer = computers.stream().filter(c->c.getId().equals(computerDto.getId())).collect(Collectors.toList()).get(0);
+        computer.setPrice(computerDto.getPrice());
         computerDao.save(computer);
     }
 }
