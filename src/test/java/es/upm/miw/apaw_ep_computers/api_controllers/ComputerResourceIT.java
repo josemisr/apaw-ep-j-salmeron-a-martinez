@@ -46,7 +46,7 @@ public class ComputerResourceIT {
 
     @Test
     void testCreateComputer() {
-        ComputerDto computerDto = postComputerDto();
+        ComputerDto computerDto = postComputerDto("cpu",160.5,150.5,true);
         assertNotNull(computerDto);
         assertEquals("cpu", computerDto.getDescription());
         assertEquals((Double)160.5, computerDto.getPrice());
@@ -56,10 +56,10 @@ public class ComputerResourceIT {
         assertEquals(components, computerDto.getComponentsId());
     }
 
-    public ComputerDto postComputerDto() {
+    public ComputerDto postComputerDto(String description, Double price, Double cost, Boolean isStocked) {
         ComputerDto computerDto = this.webTestClient
                 .post().uri(ComputerResource.COMPUTERS)
-                .body(BodyInserters.fromObject(new ComputerDto("cpu", 160.5, 150.5, true, this.supplierDto.getId(), this.components)))
+                .body(BodyInserters.fromObject(new ComputerDto(description, price, cost, isStocked, this.supplierDto.getId(), this.components)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ComputerDto.class).returnResult().getResponseBody();
@@ -108,7 +108,7 @@ public class ComputerResourceIT {
 
     @Test
     void testUpdateDescriptionComputer(){
-        ComputerDto firstComputerDto = postComputerDto();
+        ComputerDto firstComputerDto = postComputerDto("computer",500.0,450.0,true);
         firstComputerDto.setDescription("gpu");
 
         this.webTestClient
@@ -126,7 +126,7 @@ public class ComputerResourceIT {
 
     @Test
     void testUpdateDescriptionComputerExceptionBadRequest() {
-        ComputerDto computerDto = postComputerDto();
+        ComputerDto computerDto = postComputerDto("cpu",100.0,90.0,true);
         computerDto.setDescription("gpu");
 
         this.webTestClient
@@ -138,7 +138,7 @@ public class ComputerResourceIT {
 
     @Test
     void testUpdateDescriptionExceptionNotFound() {
-        ComputerDto computerDto = postComputerDto();
+        ComputerDto computerDto = postComputerDto("cpu",160.5,150.5,true);
         computerDto.setDescription("gpu");
 
         this.webTestClient
@@ -146,5 +146,98 @@ public class ComputerResourceIT {
                 .body(BodyInserters.fromObject(computerDto))
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void testPatchPrices() {
+        ComputerDto computerDto1 = postComputerDto("computer1",1000.0,750.6,true);
+        ComputerDto computerDto2 = postComputerDto("computer2",1200.5,950.5,false);
+        ComputerDto computerDto3 = postComputerDto("computer3",800.0,550.5,true);
+
+        String id1 = computerDto1.getId();
+        String id2 = computerDto2.getId();
+        String id3 = computerDto3.getId();
+
+        List<ComputerDto> list = new ArrayList<>();
+        list.add(new ComputerDto(id1,900.0));
+        list.add(new ComputerDto(id2,1100.0));
+        list.add(new ComputerDto(id3,950.0));
+
+        this.webTestClient
+                .patch().uri(ComputerResource.COMPUTERS)
+                .body(BodyInserters.fromObject(list))
+                .exchange()
+                .expectStatus().isOk();
+        ComputerDto computerResponse1 = this.webTestClient
+                .get().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID, id1)
+                .exchange().expectStatus().isOk()
+                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+        ComputerDto computerResponse2 = this.webTestClient
+                .get().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID, id2)
+                .exchange().expectStatus().isOk()
+                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+        ComputerDto computerResponse3 = this.webTestClient
+                .get().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID, id3)
+                .exchange().expectStatus().isOk()
+                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+
+        assertEquals((Double)900.0, computerResponse1.getPrice());
+        assertEquals((Double)1100.0, computerResponse2.getPrice());
+        assertEquals((Double)950.0, computerResponse3.getPrice());
+    }
+
+    @Test
+    void testPatchPricesWithFullBody() {
+        ComputerDto computerDto1 = postComputerDto("computer1",1000.0,750.6,true);
+        ComputerDto computerDto2 = postComputerDto("computer2",1200.5,950.5,false);
+
+        String id1 = computerDto1.getId();
+        String id2 = computerDto2.getId();
+
+        computerDto1.setPrice(200.0);
+        computerDto2.setPrice(300.0);
+
+        List<ComputerDto> list = new ArrayList<>();
+        list.add(computerDto1);
+        list.add(computerDto2);
+
+        this.webTestClient
+                .patch().uri(ComputerResource.COMPUTERS)
+                .body(BodyInserters.fromObject(list))
+                .exchange()
+                .expectStatus().isOk();
+        ComputerDto computerResponse1 = this.webTestClient
+                .get().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID, id1)
+                .exchange().expectStatus().isOk()
+                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+        ComputerDto computerResponse2 = this.webTestClient
+                .get().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID, id2)
+                .exchange().expectStatus().isOk()
+                .expectBody(ComputerDto.class).returnResult().getResponseBody();
+
+        assertEquals((Double)200.0, computerResponse1.getPrice());
+        assertEquals((Double)300.0, computerResponse2.getPrice());
+    }
+
+    @Test
+    void testPatchPricesExceptionBadRequest() {
+        ComputerDto computerDto1 = postComputerDto("computer1",1000.0,750.6,true);
+        ComputerDto computerDto2 = postComputerDto("computer2",1200.5,950.5,false);
+
+        String id1 = computerDto1.getId();
+        String id2 = computerDto2.getId();
+
+        computerDto1.setPrice(200.0);
+        computerDto2.setPrice(300.0);
+
+        List<ComputerDto> list = new ArrayList<>();
+        list.add(computerDto1);
+        list.add(computerDto2);
+
+        this.webTestClient
+                .patch().uri(ComputerResource.COMPUTERS + ComputerResource.ID_ID, id1)
+                .body(BodyInserters.fromObject(list))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }

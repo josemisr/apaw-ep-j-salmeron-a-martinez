@@ -6,6 +6,8 @@ import es.upm.miw.apaw_ep_computers.dtos.ComputerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(ComputerResource.COMPUTERS)
 public class ComputerResource {
@@ -28,7 +30,7 @@ public class ComputerResource {
     }
 
     @GetMapping(value = ID_ID + DESCRIPTION)
-    public ComputerDto getComputer(@PathVariable String id){
+    public ComputerDto getComputerDescription(@PathVariable String id){
         return this.computerBusinessController.getComputer(id);
     }
 
@@ -36,5 +38,18 @@ public class ComputerResource {
     public void update(@PathVariable String id, @RequestBody ComputerDto computer){
         computer.validateDescription();
         this.computerBusinessController.updateDescription(id, computer.getDescription());
+    }
+
+    @GetMapping(value = ID_ID)
+    public ComputerDto getComputer(@PathVariable String id){
+        return this.computerBusinessController.getComputer(id);
+    }
+
+    @PatchMapping
+    public void updatePrices(@RequestBody List<ComputerDto> list){
+        for (ComputerDto computerDto: list) {
+            computerDto.validatePrice();
+            this.computerBusinessController.updatePrice(computerDto);
+        }
     }
 }

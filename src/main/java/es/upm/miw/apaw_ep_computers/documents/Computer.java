@@ -44,7 +44,9 @@ public class Computer {
 
     public boolean getIsStocked() { return isStocked; }
 
-    public Supplier getSupplier() {return supplier; }
+    public Supplier getSupplier() { return supplier; }
+
+    public void setPrice(Double price){ this.price = price; }
 
     public void setDescription(String description){
         this.description = description;

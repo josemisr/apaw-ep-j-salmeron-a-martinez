@@ -25,6 +25,11 @@ public class ComputerDto {
         // empty for framework
     }
 
+    public ComputerDto(String id, Double price){
+        this.id = id;
+        this.price = price;
+    }
+
     public ComputerDto(String description, Double price, Double cost, Boolean isStocked,String supplierId, List<String> componentsId ) {
         this.description = description;
         this.price = price;
@@ -58,6 +63,10 @@ public class ComputerDto {
         return this.price;
     }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public Double getCost() {
         return this.cost;
     }
@@ -81,6 +90,11 @@ public class ComputerDto {
         if (this.price < this.cost) {
             throw new BadRequestException("The price can not be greater than cost. ");
         }
+    }
+
+    public void validatePrice(){
+        if(price == null || this.id.isEmpty() || this.id == null)
+            throw new BadRequestException("Incomplete ComputerDto. ");
     }
 
     public void validateDescription() {
