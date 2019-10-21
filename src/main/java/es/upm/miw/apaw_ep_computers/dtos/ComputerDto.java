@@ -75,7 +75,7 @@ public class ComputerDto {
     }
 
     public void validate() {
-        if (description == null || description.isEmpty() ||this.price == null || this.price < 0 || this.cost == null || this.cost < 0 ||  this.isStocked == null ||  this.supplierId == null ||  this.componentsId == null ||  this.componentsId.size() <= 0) {
+        if (description == null || description.isEmpty() ||this.price == null || this.price < 0 || this.cost == null || this.cost < 0 ||  this.isStocked == null) {
             throw new BadRequestException("Incomplete ComputerDto. ");
         }
         if (this.price < this.cost) {
