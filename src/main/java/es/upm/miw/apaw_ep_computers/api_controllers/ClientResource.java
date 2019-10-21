@@ -27,7 +27,7 @@ public class ClientResource {
         return this.clientBusinessController.create(clientDto);
     }
 
-    @GetMapping(value = ID_ID + NAME)
+    @GetMapping(value = ID_ID)
     public ClientBasicDto readById(@PathVariable String id) {
         return this.clientBusinessController.readById(id);
     }
@@ -38,7 +38,7 @@ public class ClientResource {
         this.clientBusinessController.updateName(id, clientDto.getName());
     }
 
-    @DeleteMapping(value = ID_ID + NAME)
+    @DeleteMapping(value = ID_ID)
     public void delete(@PathVariable String id) {
         this.clientBusinessController.deleteClient(id);
     }

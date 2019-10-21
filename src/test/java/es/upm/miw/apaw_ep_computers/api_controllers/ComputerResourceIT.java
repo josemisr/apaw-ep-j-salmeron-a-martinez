@@ -97,8 +97,8 @@ public class ComputerResourceIT {
     }
 
     @Test
-    void testCreateComputerExceptionNullComponentList() {
-        ComputerDto computerDto = new ComputerDto("computer",160.5, 150.5,true, this.supplierDto.getId(), null);
+    void testCreateComputerExceptionNullDescription() {
+        ComputerDto computerDto = new ComputerDto("",160.5, 150.5,true, this.supplierDto.getId(), null);
         this.webTestClient
                 .post().uri(ComputerResource.COMPUTERS)
                 .body(BodyInserters.fromObject(computerDto))
