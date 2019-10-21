@@ -109,7 +109,7 @@ public class ClientResourceIT {
                 .exchange()
                 .expectStatus().isOk();
         clientDto = this.webTestClient
-                .get().uri(ClientResource.CLIENTS + ClientResource.ID_ID + ClientResource.NAME, id)
+                .get().uri(ClientResource.CLIENTS + ClientResource.ID_ID , id)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ClientBasicDto.class)
@@ -151,21 +151,21 @@ public class ClientResourceIT {
     void testDeleteClient() {
         ClientDto clientDto = createClient("name");
         this.webTestClient
-                .get().uri(ClientResource.CLIENTS + ClientResource.ID_ID + ClientResource.NAME, clientDto.getId())
+                .get().uri(ClientResource.CLIENTS + ClientResource.ID_ID , clientDto.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ClientDto.class)
                 .returnResult().getResponseBody();
 
         this.webTestClient
-                .delete().uri(ClientResource.CLIENTS + ClientResource.ID_ID + ClientResource.NAME, clientDto.getId())
+                .delete().uri(ClientResource.CLIENTS + ClientResource.ID_ID , clientDto.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ClientBasicDto.class)
                 .returnResult().getResponseBody();
 
         this.webTestClient
-                .get().uri(ClientResource.CLIENTS + ClientResource.ID_ID + ClientResource.NAME, clientDto.getId())
+                .get().uri(ClientResource.CLIENTS + ClientResource.ID_ID , clientDto.getId())
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -177,7 +177,7 @@ public class ClientResourceIT {
         Computer computerExistent =  this.computerDao.findById(computer.getId()).orElse(null);
         assertEquals(computer.getId(),computerExistent.getId());
         this.webTestClient
-                .delete().uri(ClientResource.CLIENTS + ClientResource.ID_ID + ClientResource.NAME, clientDto.getId())
+                .delete().uri(ClientResource.CLIENTS + ClientResource.ID_ID , clientDto.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ClientBasicDto.class)
