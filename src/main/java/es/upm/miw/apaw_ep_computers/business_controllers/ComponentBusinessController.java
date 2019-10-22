@@ -48,7 +48,7 @@ public class ComponentBusinessController {
 
     public void deleteReferencedComponents(String componentId) {
         List<Computer> computers = this.computerDao.findAll();
-        if (computers.size() > 0) {
+        if (!computers.isEmpty()) {
         for (Computer computer : computers)
             computer.getComponents().removeIf(comp -> comp.getId().equals(componentId));
         }

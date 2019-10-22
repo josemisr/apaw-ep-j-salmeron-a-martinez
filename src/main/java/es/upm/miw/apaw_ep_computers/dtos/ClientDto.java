@@ -1,12 +1,8 @@
 package es.upm.miw.apaw_ep_computers.dtos;
-
-import es.upm.miw.apaw_ep_computers.documents.Address;
 import es.upm.miw.apaw_ep_computers.documents.Client;
-import es.upm.miw.apaw_ep_computers.documents.Computer;
 import es.upm.miw.apaw_ep_computers.exceptions.BadRequestException;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class ClientDto {
 
@@ -17,10 +13,6 @@ public class ClientDto {
     private String name;
 
     private LocalDateTime birthDate;
-
-    private Address address;
-
-    private List<Computer> computers;
 
     public ClientDto() {
         // empty for framework
