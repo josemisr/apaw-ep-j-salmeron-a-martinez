@@ -1,5 +1,6 @@
 package es.upm.miw.apaw_ep_computers.dtos;
 
+import es.upm.miw.apaw_ep_computers.documents.Component;
 import es.upm.miw.apaw_ep_computers.documents.Computer;
 import es.upm.miw.apaw_ep_computers.exceptions.BadRequestException;
 
@@ -7,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ComputerDto {
+
+    private final String MESSAGE = "Incomplete ComputerDto. ";
+
     private String id;
 
     private String description;
@@ -19,7 +23,7 @@ public class ComputerDto {
 
     private String supplierId;
 
-    List<String> componentsId;
+    private List<String> componentsId;
 
     public ComputerDto() {
         // empty for framework
@@ -46,7 +50,7 @@ public class ComputerDto {
         this.cost = computer.getCost();
         this.isStocked = computer.getIsStocked();
         this.supplierId = computer.getSupplier().getId();
-        this.componentsId = computer.getComponents().stream().map(obj-> obj.getId()).collect(Collectors.toList());
+        this.componentsId = computer.getComponents().stream().map(Component::getId).collect(Collectors.toList());
     }
 
     public String getId() {
@@ -85,7 +89,7 @@ public class ComputerDto {
 
     public void validate() {
         if (description == null || description.isEmpty() ||this.price == null || this.price < 0 || this.cost == null || this.cost < 0 ||  this.isStocked == null) {
-            throw new BadRequestException("Incomplete ComputerDto. ");
+            throw new BadRequestException(MESSAGE);
         }
         if (this.price < this.cost) {
             throw new BadRequestException("The price can not be greater than cost. ");
@@ -93,13 +97,13 @@ public class ComputerDto {
     }
 
     public void validatePrice(){
-        if(price == null || this.id.isEmpty() || this.id == null)
-            throw new BadRequestException("Incomplete ComputerDto. ");
+        if(price == null)
+            throw new BadRequestException(MESSAGE);
     }
 
     public void validateDescription() {
         if (description == null || description.isEmpty()) {
-            throw new BadRequestException("Incomplete ComputerDto. ");
+            throw new BadRequestException(MESSAGE);
         }
     }
 
