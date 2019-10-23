@@ -21,7 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ApiTestConfig
-public class ClientResourceIT {
+class ClientResourceIT {
 
     @Autowired
     private ComputerDao computerDao;
@@ -38,17 +38,16 @@ public class ClientResourceIT {
         assertNotNull(clientDto);
         assertEquals("00000000T", clientDto.getIdCard());
         assertEquals("paco", clientDto.getName());
-        assertEquals(LocalDateTime.of(2000,Month.JANUARY,01,0,0), clientDto.getBirthDate());
+        assertEquals(LocalDateTime.of(2000,Month.JANUARY, 1,0,0), clientDto.getBirthDate());
     }
 
     ClientDto createClient(String name){
-        ClientDto clientDto = this.webTestClient
+        return this.webTestClient
                 .post().uri(ClientResource.CLIENTS)
-                .body(BodyInserters.fromObject(new ClientDto("00000000T", name, LocalDateTime.of(2000, Month.JANUARY,01,0,0))))
+                .body(BodyInserters.fromObject(new ClientDto("00000000T", name, LocalDateTime.of(2000, Month.JANUARY, 1,0,0))))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ClientDto.class).returnResult().getResponseBody();
-        return clientDto;
     }
 
     ClientDto createClientWithOneComputer(String name, Computer computer){
@@ -61,7 +60,7 @@ public class ClientResourceIT {
 
     private Computer createComputer(){
         SupplierDto supplierDto;
-        List<String> components = new ArrayList<String>();
+        List<String> components = new ArrayList<>();
         supplierDto = this.webTestClient
                 .post().uri(SupplierResource.SUPPLIERS)
                 .body(BodyInserters.fromObject(new SupplierDto("Amazon", 10)))
@@ -71,11 +70,11 @@ public class ClientResourceIT {
 
         ComponentDto componentDto = this.webTestClient
                 .post().uri(ComponentResource.COMPONENTS)
-                .body(BodyInserters.fromObject(new ComponentDto("cpu", "intel core i5",150,"7400")))
+                .body(BodyInserters.fromObject(new ComponentDto("cpu", "intel core i5",150,"7400", true)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ComponentDto.class).returnResult().getResponseBody();
-        components.add(componentDto.getId());
+            components.add(componentDto.getId());
 
         ComputerDto computerDto = this.webTestClient
                 .post().uri(ComputerResource.COMPUTERS)
@@ -84,8 +83,7 @@ public class ClientResourceIT {
                 .expectStatus().isOk()
                 .expectBody(ComputerDto.class).returnResult().getResponseBody();
 
-        Computer computer =  this.computerDao.findById(computerDto.getId()).orElseThrow(() -> new NotFoundException("Supplier id: " + computerDto.getSupplierId()));
-        return computer;
+        return this.computerDao.findById(computerDto.getId()).orElseThrow(() -> new NotFoundException("Supplier id: " + computerDto.getSupplierId()));
     }
 
     @Test
@@ -183,7 +181,7 @@ public class ClientResourceIT {
                 .expectBody(ClientBasicDto.class)
                 .returnResult().getResponseBody();
         Computer computerNull =  this.computerDao.findById(computer.getId()).orElse(null);
-        assertEquals(null,computerNull);
+        assertNull(computerNull);
     }
 
     @Test
