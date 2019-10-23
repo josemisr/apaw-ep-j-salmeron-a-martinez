@@ -22,7 +22,7 @@ public class ReviewResourceIT {
     ReviewDto createReviewAndReturn(String description, Integer valuation){
         return this.webTestClient
                 .post().uri(ReviewResource.REVIEWS)
-                .body(BodyInserters.fromObject(new ReviewDto(description, valuation)))
+                .body(BodyInserters.fromObject(ReviewDto.builder().description(description).valuation(valuation).build()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ReviewDto.class).returnResult().getResponseBody();
@@ -38,7 +38,7 @@ public class ReviewResourceIT {
 
     @Test
     void testCreateReviewException() {
-        ReviewDto reviewDto = new ReviewDto(null,0);
+        ReviewDto reviewDto =  ReviewDto.builder().description(null).valuation(0).build();
         this.webTestClient
                 .post().uri(ReviewResource.REVIEWS)
                 .body(BodyInserters.fromObject(reviewDto))

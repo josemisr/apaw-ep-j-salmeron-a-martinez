@@ -12,9 +12,12 @@ public class Review {
 
     private Integer valuation;
 
-    public Review(String description, Integer valuation){
-        this.description = description;
-        this.valuation = valuation;
+    public Review(){
+        //empty
+    }
+
+    public static Builder builder(){
+        return new Builder();
     }
 
     public String getId() {
@@ -27,6 +30,33 @@ public class Review {
 
     public Integer getValuation() {
         return valuation;
+    }
+
+    public static class Builder{
+
+        private Review review;
+
+        public Builder(){
+            this.review = new Review();
+        }
+        public Builder id(String id){
+            this.review.id =id;
+            return this;
+        }
+
+        public Builder description(String description){
+            this.review.description =description;
+            return this;
+        }
+
+        public Builder valuation(Integer valuation){
+            this.review.valuation =valuation;
+            return this;
+        }
+
+        public Review build(){
+            return this.review;
+        }
     }
 
     @Override

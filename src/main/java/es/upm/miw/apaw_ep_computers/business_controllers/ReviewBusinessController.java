@@ -20,7 +20,7 @@ public class ReviewBusinessController {
     }
 
     public ReviewDto create(ReviewDto reviewDto) {
-        Review review = new Review(reviewDto.getDescription(), reviewDto.getValuation());
+        Review review = Review.builder().description(reviewDto.getDescription()).valuation(reviewDto.getValuation()).build();
         this.reviewDao.save(review);
         return new ReviewDto(review);
     }
