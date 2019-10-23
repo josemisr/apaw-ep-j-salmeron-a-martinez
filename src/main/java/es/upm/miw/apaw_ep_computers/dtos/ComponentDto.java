@@ -10,19 +10,22 @@ public class ComponentDto {
 
     private String name;
 
-    private double cost;
+    private Double cost;
 
     private String model;
+
+    private Boolean isComposite;
 
     public ComponentDto() {
         // empty for framework
     }
 
-    public ComponentDto(String type, String name, double cost, String model) {
+    public ComponentDto(String type, String name, double cost, String model, boolean isComposite) {
         this.type = type;
         this.name = name;
         this.cost = cost;
         this.model = model;
+        this.isComposite = isComposite;
     }
 
     public ComponentDto(Component component) {
@@ -31,6 +34,7 @@ public class ComponentDto {
         this.name = component.getName();
         this.cost = component.getCost();
         this.model = component.getModel();
+        this.isComposite = component.isComposite();
     }
 
     public String getId() {
@@ -72,6 +76,8 @@ public class ComponentDto {
     public void setModel(String model) {
         this.model = model;
     }
+
+    public boolean getIsComposite() { return isComposite; }
 
     public void validate() {
         if (type == null || type.isEmpty() || name == null || name.isEmpty() || model == null || model.isEmpty() ) {

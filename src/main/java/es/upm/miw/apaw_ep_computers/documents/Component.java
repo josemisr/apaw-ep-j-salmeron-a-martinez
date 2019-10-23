@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Document
-public class Component {
+public abstract class Component {
     @Id
     private String id;
 
@@ -16,7 +16,7 @@ public class Component {
 
     private String name;
 
-    private double cost;
+    private Double cost;
 
     private String model;
 
@@ -48,6 +48,12 @@ public class Component {
     public String getModel() { return model; }
 
     public List<Computer> getComputers() {return computers; }
+
+    public abstract void addComponent(Component component);
+
+    public abstract void removeComponent(Component component);
+
+    public abstract Boolean isComposite();
 
     @Override
     public String toString() {

@@ -37,7 +37,7 @@ public class ComputerResourceIT {
 
         ComponentDto componentDto = this.webTestClient
                 .post().uri(ComponentResource.COMPONENTS)
-                .body(BodyInserters.fromObject(new ComponentDto("cpu", "intel core i5",150,"7400")))
+                .body(BodyInserters.fromObject(new ComponentDto("cpu", "intel core i5",150,"7400",false)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ComponentDto.class).returnResult().getResponseBody();

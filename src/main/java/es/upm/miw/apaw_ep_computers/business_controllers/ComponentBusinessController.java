@@ -3,6 +3,8 @@ package es.upm.miw.apaw_ep_computers.business_controllers;
 import es.upm.miw.apaw_ep_computers.daos.ComponentDao;
 import es.upm.miw.apaw_ep_computers.daos.ComputerDao;
 import es.upm.miw.apaw_ep_computers.documents.Component;
+import es.upm.miw.apaw_ep_computers.documents.ComponentComposite;
+import es.upm.miw.apaw_ep_computers.documents.ComponentLeaf;
 import es.upm.miw.apaw_ep_computers.documents.Computer;
 import es.upm.miw.apaw_ep_computers.dtos.ComponentDto;
 
@@ -25,7 +27,11 @@ public class ComponentBusinessController {
     }
 
     public ComponentDto create(ComponentDto componentDto) {
-        Component component = new Component(componentDto.getType(), componentDto.getName(), componentDto.getCost(), componentDto.getModel());
+        Component component;
+        if(componentDto.getIsComposite())
+            component = new ComponentComposite(componentDto.getType(), componentDto.getName(), componentDto.getCost(), componentDto.getModel());
+        else
+            component = new ComponentLeaf(componentDto.getType(), componentDto.getName(), componentDto.getCost(), componentDto.getModel());
         this.componentDao.save(component);
         return new ComponentDto(component);
     }
@@ -49,8 +55,10 @@ public class ComponentBusinessController {
     public void deleteReferencedComponents(String componentId) {
         List<Computer> computers = this.computerDao.findAll();
         if (!computers.isEmpty()) {
-        for (Computer computer : computers)
-            computer.getComponents().removeIf(comp -> comp.getId().equals(componentId));
+        for (Computer computer : computers){
+            if(!computer.getComponents().isEmpty())
+                computer.getComponents().removeIf(comp -> comp != null && comp.getId().equals(componentId));
+        }
         }
     }
 }
