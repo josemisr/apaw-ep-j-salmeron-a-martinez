@@ -15,15 +15,14 @@ public class ReviewDto {
         //empty on purpose
     }
 
-    public ReviewDto(String description, Integer valuation) {
-        this.description = description;
-        this.valuation = valuation;
-    }
-
     public ReviewDto(Review review) {
         this.id = review.getId();
         this.description = review.getDescription();
         this.valuation = review.getValuation();
+    }
+
+    public static Builder builder(){
+        return new Builder();
     }
 
     public String getId() {
@@ -41,6 +40,33 @@ public class ReviewDto {
     public void validate() {
         if (this.description == null || this.description.isEmpty() || this.valuation == null ) {
             throw new BadRequestException("Incomplete ReviewDto. ");
+        }
+    }
+
+    public static class Builder{
+
+        private ReviewDto review;
+
+        public Builder(){
+            this.review = new ReviewDto();
+        }
+        public Builder id(String id){
+            this.review.id =id;
+            return this;
+        }
+
+        public Builder description(String description){
+            this.review.description =description;
+            return this;
+        }
+
+        public Builder valuation(Integer valuation){
+            this.review.valuation =valuation;
+            return this;
+        }
+
+        public ReviewDto build(){
+            return this.review;
         }
     }
 
