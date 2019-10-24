@@ -1,6 +1,7 @@
 package es.upm.miw.apaw_ep_computers.api_controllers;
 
 import es.upm.miw.apaw_ep_computers.ApiTestConfig;
+import es.upm.miw.apaw_ep_computers.documents.*;
 import es.upm.miw.apaw_ep_computers.dtos.ComponentDto;
 import es.upm.miw.apaw_ep_computers.dtos.ComputerDto;
 import es.upm.miw.apaw_ep_computers.dtos.SupplierDto;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.test.StepVerifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,4 +242,23 @@ public class ComputerResourceIT {
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }
+
+    @Test
+    void testPublisher() {
+
+        Supplier supplier = new Supplier("supplierTest",20.0);
+        ComponentComposite component = new ComponentComposite("ram","corsair",40.0,"hyper");
+        List<Component> components = new ArrayList<>();
+        components.add(component);
+        ComputerPublisher computerPublisher = new ComputerPublisher();
+        StepVerifier
+                .create(computerPublisher.publisher())
+                .then(() -> new Computer("computerTest",1000.0,750.6,true, supplier , components))
+                .thenCancel()
+                .verify();
+    }
+
+
+
+
 }
