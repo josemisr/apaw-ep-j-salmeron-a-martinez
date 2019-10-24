@@ -26,7 +26,7 @@ public class ClientPublisher {
 
     private List<Computer> computers;
 
-    public EmitterProcessor<String> emitter;
+    private EmitterProcessor<String> emitter;
     public ClientPublisher(String idCard, String name, LocalDateTime birthDate){
         this.idCard = idCard;
         this.name = name;
